@@ -1,0 +1,18 @@
+.footer-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media screen and (max-width: 768px) {
+    .footer-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Add this to center-align items */
+    }
+
+    /* Remove the margin from all anchor tags */
+    .footer-container Link {
+        margin: 0;
+    }
+}

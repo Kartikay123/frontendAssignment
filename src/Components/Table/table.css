@@ -1,0 +1,134 @@
+.table {
+    margin-top: 15px;
+    height: 100%;
+    width: 100%;
+    
+}
+/* styles.css */
+
+/* Primary button */
+.btn-primary {
+    background-color: #007bff; /* Blue */
+    color: #fff; /* White */
+    border: none;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 8px;
+    border-radius: 3px;
+
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+  
+  /* Outline primary button */
+  .btn-outline-primary {
+    color: #007bff; /* Blue */
+    border: 1px solid black;
+    background-color: transparent;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 8px;
+    border-radius: 3px;
+
+  }
+  
+  .btn-outline-primary:hover {
+    background-color: #007bff; /* Blue background on hover */
+    color: #fff; /* White text on hover */
+  }
+  
+  /* Danger button */
+  .btn-danger {
+    background-color: #dc3545; /* Red */
+    color: #fff; /* White */
+    border: none;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 8px;
+    border-radius: 3px;
+
+  }
+  
+  .btn-danger:hover {
+    background-color: #c82333; /* Darker red on hover */
+  }
+  .confirmation-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 7px;
+    width: 20%;
+    height: 14%;
+  }
+  
+  .confirmation-dialog p {
+    margin-bottom: 10px;
+  }
+  .delete-dialog{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .confirmation-dialog button {
+    margin-right: 10px;
+  }
+  .btn-primary-upload{
+    background-color: #007bff; /* Blue */
+    color: #fff; /* White */
+    border: none;
+    padding: 0.5rem 0.6rem;
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 10px;
+    border-radius: 3px;
+  }
+  
+  .rows-per-page {
+    margin-right: 10px;
+    padding: 5px;
+  }
+  
+  .page-button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    background: transparent;
+    color: #000;
+    cursor: pointer;
+  }
+  
+  .page-button.active {
+    background: #007bff;
+    color: #fff;
+  }
+  .pagination-container{
+   width: fit-content;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+  }
+  span{
+    font-size: 18px;
+  }
+
+  .operation-line{
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    padding: 10px;
+    top: 0;
+    background-color: white;
+  }
+  

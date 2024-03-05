@@ -1,0 +1,40 @@
+.card {
+  margin-top: 4px;
+  background-color: #2c2c6c;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
+  border-radius: 15px;
+  transition: all 400ms ease;
+  width: 89%;
+  animation: slideFromLeft 1.5s ease; /* Apply animation to the card */
+  height: 95%;
+}
+
+.card:hover {
+  background: transparent;
+  border-color: rgba(77, 181, 255, 0.4);
+  cursor: pointer;
+  transform: scale(1.02); /* Scale up the card on hover */
+}
+
+.card h1 {
+  display: flex;
+}
+
+.card p {
+  text-align: left;
+  font-size: 20px;
+}
+
+  @keyframes slideFromLeft {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  

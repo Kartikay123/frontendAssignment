@@ -1,0 +1,222 @@
+.header {
+  box-sizing: border-box;
+  background-color: #4db5ff; /* Dark blue */
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 0.1px solid white;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.logo-img {
+  width: 45px; /* Adjust as needed */
+  color: black;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 0 10px;
+  width: 25%;
+}
+
+.nav-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav-list.open {
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-list li {
+  /* margin-left: 1.5rem; */
+  display: flex;
+  gap: 10px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: white;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+.nav-link.open {
+  color: black;
+}
+
+.nav-link:hover {
+  color: #333333;
+}
+
+.register-link {
+  background-color: white;
+  color: black;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+.register-link:hover {
+  background-color: #007bff;
+}
+
+.mobile-menu-icon {
+  display: none;
+  cursor: pointer;
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: #333;
+  margin: 5px 0;
+}
+
+@media screen and (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .navigation {
+    position: relative;
+  }
+
+  .nav-list {
+    display: none;
+  }
+
+  .nav-list.open {
+    display: flex;
+  }
+
+  .nav-list li {
+    margin: 1rem 0;
+  }
+
+  .mobile-menu-icon {
+    display: block;
+  }
+
+  .navigation.open .bar:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+  }
+
+  .navigation.open .bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .navigation.open .bar:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+  }
+}
+
+.animated-text {
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 0 10px;
+}
+
+.text {
+  display: inline-block;
+  animation: slideFromLeft 2s ease;
+  font-size: 20px;
+  color: white;
+  font-weight: 500;
+}
+
+@keyframes slideFromLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+/* Add this CSS to your existing header.css or create a new CSS file for dialog styles */
+.dialog-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Semi-transparent background to overlay the page */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* Ensure dialog is above other content */
+}
+
+.dialog {
+  background-color: #fff;
+  position: relative;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  max-height: 500px;
+}
+
+.close-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.dialog p {
+  margin: 10px 0; /* Add some spacing between paragraphs */
+  font-size: 18px; /* Increase font size for better readability */
+  line-height: 1.5; /* Adjust line height for better spacing between lines */
+  color: #333; /* Change text color */
+}
+
+.dialog p:first-child {
+  margin-top: 0; /* Remove top margin for the first paragraph */
+}
+
+.dialog p:last-child {
+  margin-bottom: 0; /* Remove bottom margin for the last paragraph */
+}
+.logout-link {
+  background-color: white;
+  color: black;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  height: 90%;
+  border: none;
+  border-radius: 8px;
+  /* margin-left: 20px; */
+}
+
+.logout-link:hover {
+  background-color: #007bff;
+}
+.dash-cont {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}

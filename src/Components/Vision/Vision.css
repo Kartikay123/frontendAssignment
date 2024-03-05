@@ -1,0 +1,9 @@
+.vision-section h1{
+    margin-top: 0px;
+    
+}
+.vision-section{
+    margin-top: 3px;
+    display: flex;
+    justify-content: center;
+}
