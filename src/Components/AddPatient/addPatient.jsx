@@ -62,50 +62,52 @@ const AddPatient = ({loadUsers}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { temperature, spo2Level } = formData.symptoms;
-    if (isNaN(temperature) || isNaN(spo2Level)) {
-      toast.error("Temperature and SPO2 Level must be integer values");
+  
+    // Validate if temperature and SpO2 are integers and less than or equal to 100
+    if (isNaN(temperature) || isNaN(spo2Level) || temperature > 100 || spo2Level > 100) {
+      toast.error("Temperature and SpO2 Level must be integer values equal to or less than 100");
       return;
     }
+  
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); // January is 0!
     const yyyy = today.getFullYear();
-
+  
     const uploadDate = yyyy + "-" + mm + "-" + dd;
-
+  
     const updatedFormData = {
       ...formData,
       todayDate: uploadDate,
     };
     const { name, gender, dateOfBirth, email } = updatedFormData;
-  const user = { name, gender, dateOfBirth, uploadDate, email };
-    // Validate contact number
-    if (!/^(\+\d{1,13})$/.test(updatedFormData.contactNumber)) {
-      toast.error("Invalid Contact Number");
+    const user = { name, gender, dateOfBirth, uploadDate, email };
+  
+   // Validate contact number
+if (!/^\d{10}$/.test(updatedFormData.contactNumber)) {
+  toast.error("Mobile Number must be a 10-digit integer");
+  return;
+}
+
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Invalid Email Address");
       return;
     }
-
-     // Email validation using regular expression
-  const emailRegex = /^\S+@\S+\.\S+$/;
-  if (!emailRegex.test(email)) {
-    toast.error("Invalid Email Address");
-    return;
-  }
-
+  
     setFormData(updatedFormData);
     console.log(user);
     try {
       await axios.post("http://localhost:8080/patient", user);
       toast.success("Patient details submitted successfully");
       loadUsers();
-     
     } catch (error) {
       console.error("An error occurred while submitting the form:", error);
       toast.error("Error submitting patient details");
-      
     }
     handleClose();
   };
+  
 
   return (
     <div>
