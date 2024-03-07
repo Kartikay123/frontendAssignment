@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import './uploadDicom.css'; // Import the CSS file
 import { useParams,useNavigate } from 'react-router-dom';
 import { ToastContainer,toast } from 'react-toastify';
 import { IoClose } from 'react-icons/io5'; // Import your preferred close icon
+import axiosInstance from '../Context/axiosInstance';
 
 // Define a custom close button component
 const CustomCloseButton = ({ closeToast }) => (
@@ -29,7 +29,7 @@ const UploadDicom = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const result = await axios.get(`http://localhost:8080/patient/${id}`);
+        const result = await axiosInstance.get(`/patient/${id}`);
         setUser(result.data);
       } catch (error) {
         console.error("Error loading user data:", error);
@@ -46,7 +46,7 @@ const UploadDicom = () => {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('p_id', id);
-      const response = await axios.post(`http://localhost:8080/upload/${id}`, formData, {
+      const response = await axiosInstance.post(`/upload/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -56,7 +56,7 @@ const UploadDicom = () => {
       const updatedUser = { ...user, dicomAttached: true };
   
       // Update the dicomStatus of the patient
-      await axios.put(`http://localhost:8080/patient/${id}`, updatedUser);
+      await axiosInstance.put(`/patient/${id}`, updatedUser);
   
       setFile(null);
       toast.success("File Uploaded Successfully", {

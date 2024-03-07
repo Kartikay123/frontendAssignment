@@ -1,8 +1,9 @@
 import React, { Suspense, lazy } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
-import { AuthProvider } from "./Components/Context/authContext";
+import { Route, Routes } from "react-router-dom";
+import { LoginProvider } from "./Components/Context/LoginContext";
 import Header from "./Components/Header/header";
 import Footer from "./Components/Footer/footer";
+// import { LoginContext } from "./Components/Context/LoginContext";
 
 const HomePage = lazy(() => import("./Components/HomePage/homePage"));
 const UserSignUp = lazy(() => import("./Components/UserSignUp/userSignUp"));
@@ -12,13 +13,10 @@ const ViewDicom = lazy(() => import("./Components/ViewDicom/viewDicom"));
 const UploadDicom = lazy(() => import("./Components/UploadDicom/uploadDicom"));
 
 function App() {
-  const location = useLocation();
-
-  const isDashboardPage = location.pathname === "/dashboard";
-
+  
   return (
-    <AuthProvider>
-      <div className="App">
+    <div className="App">
+      <LoginProvider>
         <Header />
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
@@ -30,9 +28,9 @@ function App() {
             <Route path="/uploadicom/:id" element={<UploadDicom />} />
           </Routes>
         </Suspense>
-        {!isDashboardPage && <Footer />}
-      </div>
-    </AuthProvider>
+        <Footer />
+      </LoginProvider>
+    </div>
   );
 }
 

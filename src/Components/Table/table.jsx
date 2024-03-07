@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import "./table.css";
 import Table from "@mui/material/Table";
@@ -16,6 +15,7 @@ import { FaArrowAltCircleRight } from "react-icons/fa";
 import { FaArrowAltCircleLeft } from "react-icons/fa";
 import SearchBoxFilter from "../SearchBox/searchBox";
 import AddPatient from "../AddPatient/addPatient";
+import axiosInstance from "../Context/axiosInstance";
 export default function PatientTable() {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,28 +33,28 @@ export default function PatientTable() {
 
   const loadUsers = async () => {
     try {
-      let endpoint = `http://localhost:8080/patient?page=${currentPage}&limit=${rowsPerPage}`;
+      let endpoint = `/patient?page=${currentPage}&limit=${rowsPerPage}`;
       // Append filter parameters if filterQuery and filterType are set
       if (filterQuery && filterType) {
         // Determine which endpoint to call based on filterType
         if (filterType === "name") {
-          endpoint = `http://localhost:8080/patient/SearchByName?query=${filterQuery}`;
+          endpoint = `/patient/SearchByName?query=${filterQuery}`;
         } else if (filterType === "id") {
-          endpoint = `http://localhost:8080/patient/SearchByID?query=${filterQuery}`;
+          endpoint = `/patient/SearchByID?query=${filterQuery}`;
         } else if (filterType === "email") {
-          endpoint = `http://localhost:8080/patient/SearchByEmail?query=${filterQuery}`;
+          endpoint = `/patient/SearchByEmail?query=${filterQuery}`;
         } else if (filterType === "UploadDate") {
-          endpoint = `http://localhost:8080/patient/SearchByUploadDate?query=${filterQuery}`;
+          endpoint = `/patient/SearchByUploadDate?query=${filterQuery}`;
         } else if (filterType === "DicomStatus") {
           if (filterQuery.toLowerCase() === "view") {
-            endpoint = `http://localhost:8080/patient/SearchByDicomStatus?query=true`;
+            endpoint = `/patient/SearchByDicomStatus?query=true`;
           } else if (filterQuery.toLowerCase() === "upload") {
-            endpoint = `http://localhost:8080/patient/SearchByDicomStatus?query=false`;
+            endpoint = `/patient/SearchByDicomStatus?query=false`;
           }
         }
       }
 
-      const result = await axios.get(endpoint);
+      const result = await axiosInstance.get(endpoint);
       setUsers(result.data);
     } catch (error) {
       console.error("Error loading users:", error);
@@ -63,7 +63,7 @@ export default function PatientTable() {
 
   const deleteUser = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/patient/${id}`);
+      await axiosInstance.delete(`/patient/${id}`);
       toast.success("Deleted Successfully");
       loadUsers();
     } catch (error) {

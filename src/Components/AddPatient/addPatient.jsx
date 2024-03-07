@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import {
   Dialog,
   DialogTitle,
@@ -14,6 +13,7 @@ import {
 } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "./addPatient.css";
+import axiosInstance from '../Context/axiosInstance';
 
 const AddPatient = ({loadUsers}) => {
   const initialFormData = {
@@ -98,7 +98,7 @@ if (!/^\d{10}$/.test(updatedFormData.contactNumber)) {
     setFormData(updatedFormData);
     console.log(user);
     try {
-      await axios.post("http://localhost:8080/patient", user);
+      await axiosInstance.post("/patient", user);
       toast.success("Patient details submitted successfully");
       loadUsers();
     } catch (error) {

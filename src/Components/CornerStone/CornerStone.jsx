@@ -3,10 +3,10 @@ import { RenderingEngine, Enums } from "@cornerstonejs/core";
 
 const { ViewportType } = Enums;
 
-const CornerstoneElement = ({ id }) => {
+const CornerStoneImple = ({ id }) => {
   useEffect(() => {
     const run = async () => {
-      const imageIds = [`dicomweb://localhost:8080/view/${id}`];
+      const imageIds = [`dicomweb:http://localhost:8080/view/${id}`];
 
       const element = document.createElement("div");
       element.id = "cornerstone-element";
@@ -52,4 +52,4 @@ const CornerstoneElement = ({ id }) => {
   );
 };
 
-export default CornerstoneElement;
+export default CornerStoneImple;

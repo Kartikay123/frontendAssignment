@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect ,useContext} from "react";
+import { Link,useNavigate } from "react-router-dom";
 import "./header.css";
 import Logo from "../../assets/mylogo.jpg";
 import { IoCloseCircleOutline } from "react-icons/io5";
-import { useAuth } from "../Context/authContext";
+// import { useAuth } from "../Context/authContext";
+import { LoginContext } from "../Context/LoginContext";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showDialog, setShowDialog] = useState(false); // State to control dialog visibility
-  const { currentUser, logout } = useAuth(); // Destructuring currentUser and logout from useAuth
+  // const { currentUser, logout } = useAuth(); // Destructuring currentUser and logout from useAuth
+  const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
+  const navigate= useNavigate();
+
 
   useEffect(() => {
     setIsLoaded(true);
@@ -29,13 +33,11 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await logout(); // Call the logout function from useAuth
-      // Redirect the user to the homepage after logout
-      // You may need to adjust the redirection logic based on your routing setup
-      // For example, you might use react-router's history object
-      window.location.href = "/";
+      localStorage.removeItem("token");
+      setIsLoggedIn(false);
+      navigate("/");
     } catch (error) {
-      console.log("Error logging out:", error);
+      console.log("Error logging out :", error);
     }
   };
 
@@ -77,7 +79,7 @@ const Header = () => {
             </li>
             {/* Conditionally render Register or Logout button */}
             <li>
-              {currentUser ? (
+              {isLoggedIn ? (
                 <button onClick={handleLogout} className="nav-link logout-link">
                   Logout
                 </button>

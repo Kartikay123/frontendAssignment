@@ -12,12 +12,11 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useAuth } from "../Context/authContext";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 const defaultTheme = createTheme();
 
 export default function UserSignUp() {
-  const { signup } = useAuth(); // Assuming there's a function checkEmailExists to check if email exists
   const [loading, setLoading] = useState(false);
   const Navigate = useNavigate();
 
@@ -54,17 +53,31 @@ export default function UserSignUp() {
       setPasswordError(true);
       return;
     }
+    if (!validateEmail(email)) {
+      setEmailInvalid(true);
+      return;
+    }
 
     // Password validation
     if (!validatePassword(password)) {
       setPasswordError(true);
       return;
     }
-
+    const fullName= firstName + lastName;
+    const role= 'USER';
+    const values= {fullName,email,password,role};
     try {
       setLoading(true);
-      await signup(email, password);
-      Navigate("/dashboard");
+      const response = await axios.post(
+        "http://localhost:8080/auth/signup",
+        values
+      );
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000);
+        
+      console.log("Response from backend:", response.data);
+        Navigate('/login');
     } catch (error) {
       if (error.message.includes("auth/email-already-in-use")) {
         setEmailError(true);
@@ -77,6 +90,11 @@ export default function UserSignUp() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   }
 
   // Function to validate password format

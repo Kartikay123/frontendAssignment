@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./viewDicom.css";
 import { useParams,Link } from "react-router-dom";
-import CornerstoneElement from "../CornerStone/CornerStone";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { initialiseCornerstone } from "./CornerStoneStart";
+import CornerStoneImple from "../CornerStone/CornerStone";
+import axiosInstance from "../Context/axiosInstance";
 
 function ViewDicom() {
 
@@ -26,7 +26,7 @@ function ViewDicom() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const result = await axios.get(`http://localhost:8080/patient/${id}`);
+        const result = await axiosInstance.get(`/patient/${id}`);
         setUser(result.data); // Update user state with fetched data
       } catch (error) {
         toast.error("Error loading user:", error);
@@ -69,7 +69,7 @@ function ViewDicom() {
       <ToastContainer />
       <div className="view-container">
         <div className="corner">
-          {intialize && id !== -1 && <CornerstoneElement id={id} />}
+          {intialize && id !== -1 && <CornerStoneImple id={id} />}
         </div>
         <Link className="btn-primary-upload-here" to={`/uploadicom/${id}`}>
           Update Dicom

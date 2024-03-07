@@ -3,6 +3,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } 
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from "../Context/axiosInstance";
 
 const EditPatient = ({ open, handleClose, userId ,loadUsers}) => {
   const [editedUserData, setEditedUserData] = useState(null);
@@ -11,7 +12,7 @@ const EditPatient = ({ open, handleClose, userId ,loadUsers}) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const result = await axios.get(`http://localhost:8080/patient/${userId}`);
+        const result = await axiosInstance.get(`/patient/${userId}`);
         setEditedUserData(result.data);
       } catch (error) {
         console.error("Error loading user data:", error);
@@ -29,7 +30,7 @@ const EditPatient = ({ open, handleClose, userId ,loadUsers}) => {
   const handleSubmit = async () => {
     try {
       // Make PUT request to update user data
-      await axios.put(`http://localhost:8080/patient/${userId}`, editedUserData);
+      await axiosInstance.put(`/patient/${userId}`, editedUserData);
       toast.success("Update Successfully");
       handleClose();
       loadUsers();

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React,{useContext} from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -12,17 +12,20 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Loader from "../Loader/loader";
 import { useState } from "react";
 import "./userLogin.css";
-import { useAuth } from "../Context/authContext";
+// import { useAuth } from "../Context/authContext";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LoginContext } from "../Context/LoginContext";
+import axiosInstance from "../Context/axiosInstance";
 
 const defaultTheme = createTheme();
 
 export default function UserLogin() {
   const Navigate = useNavigate();
-  const { login } = useAuth();
+  // const { login } = useAuth();
   const [loading, setLoading] = useState(false);
+  const { isLoggedIn, setIsLoggedIn } = useContext(LoginContext);
   async function handleSubmit(event) {
     event.preventDefault();
     
@@ -60,15 +63,16 @@ export default function UserLogin() {
         });
         return; 
       }
-  
+      const values = { email, password }; // Store email and password in values variable
       // Attempt to login
-      await login(email, password);
+      const response = await axiosInstance.post("/auth/signin", values);
+      setIsLoggedIn(true);
       toast.success("Login Successful", 
       {
         position: "top-right",
         theme: "colored",
       });
-  
+      localStorage.setItem("token", response.data.token);
       setTimeout(() => {
         Navigate("/dashboard");
       }, 2000);
