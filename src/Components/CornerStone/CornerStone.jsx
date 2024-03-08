@@ -6,16 +6,16 @@ const { ViewportType } = Enums;
 const CornerStoneImple = ({ id }) => {
   useEffect(() => {
     const run = async () => {
-      const imageIds = [`dicomweb:http://localhost:8080/view/${id}`];
-
+      const imageIds = [`dicomweb://localhost:8080/view/${id}`];
       const element = document.createElement("div");
       element.id = "cornerstone-element";
       element.style.width = "500px";
       element.style.height = "450px";
       element.style.position = "absolute"; 
-      element.style.top = "130px"; 
+      element.style.top = "130px";
       element.style.right = "250px";
-      element.style.backgroundColor = "black"; 
+      element.style.zIndex = "2"; 
+      element.style.backgroundColor = "black";
       document.getElementById("content").appendChild(element);
 
       const renderingEngineId = "myRenderingEngine";

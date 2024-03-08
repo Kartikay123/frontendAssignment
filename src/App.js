@@ -1,9 +1,8 @@
 import React, { Suspense, lazy } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { LoginProvider } from "./Components/Context/LoginContext";
 import Header from "./Components/Header/header";
 import Footer from "./Components/Footer/footer";
-// import { LoginContext } from "./Components/Context/LoginContext";
 
 const HomePage = lazy(() => import("./Components/HomePage/homePage"));
 const UserSignUp = lazy(() => import("./Components/UserSignUp/userSignUp"));
@@ -13,7 +12,11 @@ const ViewDicom = lazy(() => import("./Components/ViewDicom/viewDicom"));
 const UploadDicom = lazy(() => import("./Components/UploadDicom/uploadDicom"));
 
 function App() {
-  
+  const location = useLocation();
+
+  // Check if the current route is /dashboard
+  const isDashboardRoute = location.pathname === "/dashboard";
+
   return (
     <div className="App">
       <LoginProvider>
@@ -28,7 +31,7 @@ function App() {
             <Route path="/uploadicom/:id" element={<UploadDicom />} />
           </Routes>
         </Suspense>
-        <Footer />
+        {!isDashboardRoute && <Footer />} {/* Render footer if not in /dashboard route */}
       </LoginProvider>
     </div>
   );

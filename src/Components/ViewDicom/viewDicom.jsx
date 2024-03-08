@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./viewDicom.css";
-import { useParams,Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { initialiseCornerstone } from "./CornerStoneStart";
 import CornerStoneImple from "../CornerStone/CornerStone";
@@ -71,9 +71,7 @@ function ViewDicom() {
         <div className="corner">
           {intialize && id !== -1 && <CornerStoneImple id={id} />}
         </div>
-        <Link className="btn-primary-upload-here" to={`/uploadicom/${id}`}>
-          Update Dicom
-        </Link>
+       
 
         {user && (
           <div className="user-card">
