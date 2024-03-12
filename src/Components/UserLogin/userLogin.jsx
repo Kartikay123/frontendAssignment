@@ -63,10 +63,33 @@ export default function UserLogin() {
         });
         return; 
       }
+
+      if (!validateEmail(email)) {
+        toast.error("Invalid Email id", {
+          position: "top-right",
+          theme: "colored",
+      });
+        return;
+      }
+      if (!validatePassword(password)) {
+        toast.error("Password must contain 1 lowercase letter, 1 uppercase letter, 1 special character, 1 number, and have a minimum length of 8 characters", {
+          position: "top-right",
+          theme: "colored",
+      });
+        return;
+      }
       const values = { email, password }; // Store email and password in values variable
       // Attempt to login
       const response = await axiosInstance.post("/auth/signin", values);
+      console.log(response);
       setIsLoggedIn(true);
+      if (!response.data.token) {
+        toast.error("Please Enter Valid Credientials", {
+            position: "top-right",
+            theme: "colored",
+        });
+    }
+    else{
       toast.success("Login Successful", 
       {
         position: "top-right",
@@ -76,16 +99,29 @@ export default function UserLogin() {
       setTimeout(() => {
         Navigate("/dashboard");
       }, 2000);
+    }
     } catch (error) {
-      toast.error("Please Enter Valid Credientials", {
-        position: "top-right",
-        theme: "colored",
-      });
-    } finally {
+        // For other errors
+        toast.error("Please Enter Valid Credientials", {
+            position: "top-right",
+            theme: "colored",
+        });
+    
+  }
+    finally {
       setLoading(false);
     }
   }
 
+  function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+  function validatePassword(password) {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  }
   return (
     <div className="login-container">
       <ThemeProvider theme={defaultTheme}>

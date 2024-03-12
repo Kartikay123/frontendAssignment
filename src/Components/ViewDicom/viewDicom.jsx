@@ -26,7 +26,7 @@ function ViewDicom() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const result = await axiosInstance.get(`/patient/${id}`);
+        const result = await axiosInstance.get(`/view/details/${id}`);
         setUser(result.data); // Update user state with fetched data
       } catch (error) {
         toast.error("Error loading user:", error);
@@ -36,33 +36,33 @@ function ViewDicom() {
     loadData();
   }, [id]); // Fetch data when ID changes
 
-  const calculateAge = (dob) => {
-    // Split the dob string into year, month, and day components
-    const dobComponents = dob.split("-");
-    const dobYear = parseInt(dobComponents[0]);
-    const dobMonth = parseInt(dobComponents[1]) - 1; // Months are 0-based in JavaScript Date object
-    const dobDay = parseInt(dobComponents[2]);
+  // const calculateAge = (dob) => {
+  //   // Split the dob string into year, month, and day components
+  //   const dobComponents = dob.split("-");
+  //   const dobYear = parseInt(dobComponents[0]);
+  //   const dobMonth = parseInt(dobComponents[1]) - 1; // Months are 0-based in JavaScript Date object
+  //   const dobDay = parseInt(dobComponents[2]);
 
-    // Create a new Date object using the components
-    const dobDate = new Date(dobYear, dobMonth, dobDay);
+  //   // Create a new Date object using the components
+  //   const dobDate = new Date(dobYear, dobMonth, dobDay);
 
-    // Get the current date
-    const currentDate = new Date();
+  //   // Get the current date
+  //   const currentDate = new Date();
 
-    // Calculate the age
-    let age = currentDate.getFullYear() - dobDate.getFullYear();
-    const monthDiff = currentDate.getMonth() - dobDate.getMonth();
+  //   // Calculate the age
+  //   let age = currentDate.getFullYear() - dobDate.getFullYear();
+  //   const monthDiff = currentDate.getMonth() - dobDate.getMonth();
 
-    // Adjust age if the current month is before the birth month
-    if (
-      monthDiff < 0 ||
-      (monthDiff === 0 && currentDate.getDate() < dobDate.getDate())
-    ) {
-      age--;
-    }
+  //   // Adjust age if the current month is before the birth month
+  //   if (
+  //     monthDiff < 0 ||
+  //     (monthDiff === 0 && currentDate.getDate() < dobDate.getDate())
+  //   ) {
+  //     age--;
+  //   }
 
-    return age;
-  };
+  //   return age;
+  // };
 
   return (
     <div className="modalBackground">
@@ -77,22 +77,23 @@ function ViewDicom() {
           <div className="user-card">
             <h2>Patient Details</h2>
             <p>
-              <strong>Patient ID:</strong> {user.id}
+              <strong>Sex:</strong> {user[4]}
             </p>
             <p>
-              <strong>Name:</strong> {user.name}
+              <strong>Patient ID:</strong> {user[0]}
             </p>
             <p>
-              <strong>Age:</strong> {calculateAge(user.dateOfBirth)} years
+              <strong>Name:</strong> {user[1]}
             </p>
             <p>
-              <strong>Sex:</strong> {user.gender}
+              <strong>Age:</strong> {user[3]} 
+            </p>
+            
+            <p>
+              <strong>Date of Birth:</strong> {user[5]}
             </p>
             <p>
-              <strong>Date of Birth:</strong> {user.dateOfBirth}
-            </p>
-            <p>
-              <strong>Study Upload Date:</strong> {user.uploadDate}
+              <strong>Study Upload Date:</strong> {user[2]}
             </p>
           </div>
         )}

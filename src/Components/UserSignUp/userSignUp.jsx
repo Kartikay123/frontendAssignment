@@ -75,22 +75,28 @@ export default function UserSignUp() {
       setTimeout(() => {
         setLoading(false);
       }, 3000);
-        
-      console.log("Response from backend:", response.data);
-        Navigate('/login');
-    } catch (error) {
-      if (error.message.includes("auth/email-already-in-use")) {
+      console.log(response.data);
+      if(response.data.statusCode===500)
+      {
         setEmailError(true);
         setemailExist(true);
-      } else if (error.message.includes("auth/invalid-email")) {
-        setEmailInvalid(true);
-      } else {
-        alert("Failed to create an account: " + error.message);
       }
-    } finally {
+      else{
+        Navigate('/login');
+      }
+       
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+         
+      } else if (error.message.includes("auth/invalid-email")) {
+          setEmailInvalid(true);
+      } else {
+          alert("Failed to create an account: " + error.message);
+      }
+  } finally {
       setLoading(false);
-    }
   }
+}
 
   function validateEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
