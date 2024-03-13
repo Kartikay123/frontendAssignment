@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./viewDicom.css";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { initialiseCornerstone } from "./CornerStoneStart";
 import CornerStoneImple from "../CornerStone/CornerStone";
 import axiosInstance from "../Context/axiosInstance";
+import { useUpdateStatus } from "../Context/upDateStatusContext"; // Import the useUpdateStatus hook from your context
 
 function ViewDicom() {
-
-  
   const { id } = useParams();
   const [user, setUser] = useState(null);
-  // Changed from array to single user object
-  const [intialize, setintialize] = useState(false);
+  const [initialized, setInitialized] = useState(false);
+  const {updateStatus, setUpdateStatus} =useUpdateStatus();
 
   const initialisingCornerStone = async () => {
     await initialiseCornerstone();
-    setintialize(true);
+    setInitialized(true);
   };
 
   useEffect(() => {
@@ -27,51 +26,35 @@ function ViewDicom() {
     const loadData = async () => {
       try {
         const result = await axiosInstance.get(`/view/details/${id}`);
-        setUser(result.data); // Update user state with fetched data
+        setUser(result.data);
       } catch (error) {
         toast.error("Error loading user:", error);
       }
     };
 
     loadData();
-  }, [id]); // Fetch data when ID changes
+  }, [id]);
 
-  // const calculateAge = (dob) => {
-  //   // Split the dob string into year, month, and day components
-  //   const dobComponents = dob.split("-");
-  //   const dobYear = parseInt(dobComponents[0]);
-  //   const dobMonth = parseInt(dobComponents[1]) - 1; // Months are 0-based in JavaScript Date object
-  //   const dobDay = parseInt(dobComponents[2]);
+  const reloadPage = () => {
+    setUpdateStatus(false);
+    window.location.reload();
+  };
 
-  //   // Create a new Date object using the components
-  //   const dobDate = new Date(dobYear, dobMonth, dobDay);
-
-  //   // Get the current date
-  //   const currentDate = new Date();
-
-  //   // Calculate the age
-  //   let age = currentDate.getFullYear() - dobDate.getFullYear();
-  //   const monthDiff = currentDate.getMonth() - dobDate.getMonth();
-
-  //   // Adjust age if the current month is before the birth month
-  //   if (
-  //     monthDiff < 0 ||
-  //     (monthDiff === 0 && currentDate.getDate() < dobDate.getDate())
-  //   ) {
-  //     age--;
-  //   }
-
-  //   return age;
-  // };
-
+  // Call reloadPage function if reloadRequested is true
+  if (updateStatus) {
+    reloadPage();
+  }
   return (
     <div className="modalBackground">
       <ToastContainer />
       <div className="view-container">
         <div className="corner">
-          {intialize && id !== -1 && <CornerStoneImple id={id} />}
+          {initialized && id !== -1 && <CornerStoneImple id={id} />}
         </div>
-       
+        <Link className="btn-primary-upload-view" to={`/uploadicom/${id}`}
+        onClick={() => setUpdateStatus(true)}>
+          Update
+        </Link>
 
         {user && (
           <div className="user-card">
@@ -86,9 +69,8 @@ function ViewDicom() {
               <strong>Name:</strong> {user[1]}
             </p>
             <p>
-              <strong>Age:</strong> {user[3]} 
+              <strong>Age:</strong> {user[3]}
             </p>
-            
             <p>
               <strong>Date of Birth:</strong> {user[5]}
             </p>

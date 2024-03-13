@@ -47,3 +47,13 @@
   bottom: 7rem;
   right: 27rem;
 }
+.btn-primary-upload-view{
+  background-color: #007bff; /* Blue */
+  color: #fff; /* White */
+  border: none;
+  padding: 0.5rem 0.6rem;
+  text-decoration: none;
+  cursor: pointer;
+  margin-left: 10px;
+  border-radius: 3px;
+}

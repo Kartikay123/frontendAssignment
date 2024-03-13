@@ -27,7 +27,7 @@ const CornerStoneImple = ({ id }) => {
         type: ViewportType.STACK,
         element,
         defaultOptions: {
-          background: [0.2, 0, 0.2],
+          background: [255,255,255],
         },
       };
 

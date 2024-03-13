@@ -46,17 +46,32 @@ const UploadDicom = () => {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('p_id', id);
-      const response = await axiosInstance.post(`/upload/${id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const response = await axiosInstance.get(`/upload/${id}`);
+      console.log(response.data);
+      if (response.data) {
+        // File exists, make a PUT request to update
+        await axiosInstance.put(`/update/${id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+      } else {
+        // File doesn't exist, make a POST request to upload
+        await axiosInstance.post(`/upload/${id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+      }
   
       // Update the user object to set dicomAttached to true
       const updatedUser = { ...user, dicomAttached: true };
   
       // Update the dicomStatus of the patient
       await axiosInstance.put(`/patient/${id}`, updatedUser);
+  
+      // Update the user state to reflect the changes
+      setUser(updatedUser);
   
       setFile(null);
       toast.success("File Uploaded Successfully", {
@@ -67,7 +82,7 @@ const UploadDicom = () => {
       setTimeout(() => {
         Navigate('/dashboard');
       }, 3000);
-     
+  
     } catch (error) {
       toast.error('Error uploading file:');
     }

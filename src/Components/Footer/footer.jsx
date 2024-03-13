@@ -5,6 +5,8 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import { LinkedIn, Instagram, Twitter } from "@mui/icons-material";
 import { Box } from "@mui/material";
+import { FaSquareXTwitter } from "react-icons/fa6";
+
 import './footer.css';
 export default function Footer() {
   return (
@@ -38,7 +40,7 @@ export default function Footer() {
               <Instagram style={{ color: "black", marginRight: "10px" }} />
             </Link>
             <Link href="https://twitter.com/DeepTekAI" target="_blank" rel="noopener noreferrer">
-              <Twitter style={{ color: "black" }} />
+            <FaSquareXTwitter style={{ color: "black", fontSize: '23px'}}/>
             </Link>
           </Grid>
           <Grid item>
