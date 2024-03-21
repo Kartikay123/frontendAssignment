@@ -1,52 +1,27 @@
-.custom-button {
-    background-color: blue; /* Green */
+.btn-outline-primary-edit{
+    border: 1px solid black;
+    background-color: transparent;
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 8px;
+    height: 33px;
+    border-radius: 3px;
+}
+.btn-danger-edit{
+    color: #fff; 
+    background-color: red; /* Red */
     border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
-}
-
-.custom-button:hover {
-    background-color:green; 
-}
-.cancel-button {
-    color: #fff;
-    padding: 3px 5px;
-    text-align: center;
     text-decoration: none;
     cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
-    background-color: #ff0000; /* Red color */
-    &:hover {
-        background-color: #cc0000; /* Darker red color on hover */
-    }
+    margin-left: 8px;
+    height: 35px;
+    border-radius: 3px;
+}
+.btn-outline-primary-edit:hover {
+    background-color: #007bff; /* Blue background on hover */
+    color: #fff; /* White text on hover */
 }
 
-.submit-button {
-    color: #fff;
-    padding: 3px 5px;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
-    background-color: #00cc00;; /* Green color */
-    &:hover {
-        background-color: green  /* Darker green color on hover */
-    }
-}
-
-.cancel-button button,
-.submit-button button {
-  color: black;
-}
-
-  
+.btn-danger-edit:hover {
+    background-color: #c82333; /* Darker red on hover */
+  }

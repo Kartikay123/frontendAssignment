@@ -14,19 +14,15 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const defaultTheme = createTheme();
 
 export default function UserSignUp() {
   const [loading, setLoading] = useState(false);
   const Navigate = useNavigate();
-
-  const [firstNameError, setFirstNameError] = useState(false);
-  const [lastNameError, setLastNameError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [emailExist, setemailExist] = useState(false); // State to track if email exists
-  const [emailInvalid, setEmailInvalid] = useState(false);
-
+  
   async function handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -38,34 +34,44 @@ export default function UserSignUp() {
 
     // Validate fields
     if (!firstName) {
-      setFirstNameError(true);
+      toast.error('First Name is required');
+      return;
+    }
+    if(firstName.length>255)
+    {
+      toast.error('First Name should be less than 255 characters');
       return;
     }
     if (!lastName) {
-      setLastNameError(true);
+      toast.error('Last Name is required');
+      return;
+    }
+    if(lastName.length>255)
+    {
+      toast.error('Last Name should be less than 255 characters');
       return;
     }
     if (!email) {
-      setEmailError(true);
+      toast.error('Email is required');
       return;
     }
     if (!password) {
-      setPasswordError(true);
+      toast.error('Password is required');
       return;
     }
     if (!validateEmail(email)) {
-      setEmailInvalid(true);
+      toast.error('Invalid email format');
       return;
     }
 
     // Password validation
     if (!validatePassword(password)) {
-      setPasswordError(true);
+      toast.error('Password must contain 1 lowercase letter, 1 uppercase letter, 1 special character, 1 number, and have a minimum length of 8 characters');
       return;
     }
-    const fullName= firstName + lastName;
+    const name= firstName + " " +lastName;
     const role= 'USER';
-    const values= {fullName,email,password,role};
+    const values= {name,email,password,role};
     try {
       setLoading(true);
       const response = await axios.post(
@@ -78,8 +84,7 @@ export default function UserSignUp() {
       console.log(response.data);
       if(response.data.statusCode===500)
       {
-        setEmailError(true);
-        setemailExist(true);
+        toast.error('Email already exists');
       }
       else{
         Navigate('/login');
@@ -89,7 +94,7 @@ export default function UserSignUp() {
       if (error.response && error.response.status === 400) {
          
       } else if (error.message.includes("auth/invalid-email")) {
-          setEmailInvalid(true);
+          toast.error('Invalid email format');
       } else {
           alert("Failed to create an account: " + error.message);
       }
@@ -146,9 +151,6 @@ export default function UserSignUp() {
                       id="firstName"
                       label="First Name"
                       autoFocus
-                      error={firstNameError}
-                      helperText={firstNameError && "First Name is required"}
-                      onChange={() => setFirstNameError(false)}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -159,9 +161,6 @@ export default function UserSignUp() {
                       label="Last Name"
                       name="lastName"
                       autoComplete="family-name"
-                      error={lastNameError}
-                      helperText={lastNameError && "Last Name is required"}
-                      onChange={() => setLastNameError(false)}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -172,14 +171,6 @@ export default function UserSignUp() {
                       label="Email Address"
                       name="email"
                       autoComplete="email"
-                      error={emailError || emailInvalid} // Update error state
-                      helperText={
-                        (emailError &&
-                          (emailExist
-                            ? "Email already exists"
-                            : "Email is required")) ||
-                        (emailInvalid && "Invalid email format") // Display error message for invalid email
-                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -191,13 +182,6 @@ export default function UserSignUp() {
                       type="password"
                       id="password"
                       autoComplete="new-password"
-                      error={passwordError}
-                      helperText={
-                        passwordError
-                          ? "Password must contain 1 lowercase letter, 1 uppercase letter, 1 special character, 1 number, and have a minimum length of 8 characters"
-                          : ""
-                      }
-                      onChange={() => setPasswordError(false)}
                     />
                   </Grid>
                 </Grid>
@@ -222,6 +206,7 @@ export default function UserSignUp() {
           </Box>
         </Container>
       </ThemeProvider>
+      <ToastContainer />
     </div>
   );
 }

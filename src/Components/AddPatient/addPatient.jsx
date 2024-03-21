@@ -10,12 +10,14 @@ import {
   FormControl,
   Grid,
   Button,
+  InputLabel,
 } from "@mui/material";
+
 import { ToastContainer, toast } from "react-toastify";
 import "./addPatient.css";
-import axiosInstance from '../Context/axiosInstance';
+import axiosInstance from "../Context/axiosInstance";
 
-const AddPatient = ({loadUsers}) => {
+const AddPatient = ({ loadUsers }) => {
   const initialFormData = {
     name: "",
     gender: "",
@@ -37,7 +39,7 @@ const AddPatient = ({loadUsers}) => {
 
   const handleClose = () => {
     setOpen(false);
-    setFormData(initialFormData); 
+    setFormData(initialFormData);
   };
 
   const handleInputChange = (e) => {
@@ -62,39 +64,46 @@ const AddPatient = ({loadUsers}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { temperature, spo2Level } = formData.symptoms;
-  
+
     // Validate if temperature and SpO2 are integers and less than or equal to 100
-    if (isNaN(temperature) || isNaN(spo2Level) || temperature > 100 || spo2Level > 100) {
-      toast.error("Temperature and SpO2 Level must be integer values equal to or less than 100");
+    if (
+      isNaN(temperature) ||
+      isNaN(spo2Level) ||
+      temperature > 100 ||
+      spo2Level > 100
+    ) {
+      toast.error(
+        "Temperature and SpO2 Level must be integer values equal to or less than 100"
+      );
       return;
     }
-  
+
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
     const mm = String(today.getMonth() + 1).padStart(2, "0"); // January is 0!
     const yyyy = today.getFullYear();
-  
-    const uploadDate = yyyy + "-" + mm + "-" + dd;
-  
+
+    const uploadDate = dd + "-" + mm + "-" + yyyy;
+
     const updatedFormData = {
       ...formData,
       todayDate: uploadDate,
     };
     const { name, gender, dateOfBirth, email } = updatedFormData;
     const user = { name, gender, dateOfBirth, uploadDate, email };
-  
-   // Validate contact number
-if (!/^\d{10}$/.test(updatedFormData.contactNumber)) {
-  toast.error("Mobile Number must be a 10-digit integer");
-  return;
-}
+    console.log(gender);
+    // Validate contact number
+    if (!/^\d{10}$/.test(updatedFormData.contactNumber)) {
+      toast.error("Mobile Number must be a 10-digit integer");
+      return;
+    }
 
     const emailRegex = /^\S+@\S+\.\S+$/;
     if (!emailRegex.test(email)) {
       toast.error("Invalid Email Address");
       return;
     }
-  
+
     setFormData(updatedFormData);
     console.log(user);
     try {
@@ -107,11 +116,10 @@ if (!/^\d{10}$/.test(updatedFormData.contactNumber)) {
     }
     handleClose();
   };
-  
 
   return (
     <div>
-      <ToastContainer /> 
+      <ToastContainer />
       <div className="custom-button" onClick={handleOpen}>
         Add Patient
       </div>
@@ -128,18 +136,41 @@ if (!/^\d{10}$/.test(updatedFormData.contactNumber)) {
               alignItems="center"
             >
               <Grid item xs={12} sm={6}>
+                <InputLabel
+                  id="name"
+                  style={{
+                    color: "black",
+                    marginBottom: "3px",
+                    textAlign: "left",
+                  }}
+                >
+                  Name *
+                </InputLabel>
                 <TextField
-                  placeholder="Patient Name"
+                  id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
                   required
                   fullWidth
+                  inputProps={{ maxLength: 35}} // Set maximum length to 255 characters
+
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
+                <InputLabel
+                  id="gender"
+                  style={{
+                    color: "black",
+                    marginBottom: "3px",
+                    textAlign: "left",
+                  }}
+                >
+                  Gender *
+                </InputLabel>
                 <FormControl fullWidth>
                   <Select
+                    id="gender"
                     name="gender"
                     value={formData.gender}
                     onChange={handleInputChange}
@@ -148,40 +179,75 @@ if (!/^\d{10}$/.test(updatedFormData.contactNumber)) {
                     displayEmpty
                   >
                     <MenuItem value="" disabled>
-                      <span style={{ fontWeight: 'lighter' }}>Select Gender</span>
+                      <span style={{ fontWeight: "lighter" }}>Select Type</span>
                     </MenuItem>
-                    <MenuItem value="male">Male</MenuItem>
-                    <MenuItem value="female">Female</MenuItem>
-                    <MenuItem value="other">Other</MenuItem>
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
+                    <MenuItem value="Others">Other</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={6}>
+                <InputLabel
+                  id="dob"
+                  style={{
+                    color: "black",
+                    marginBottom: "3px",
+                    textAlign: "left",
+                  }}
+                >
+                  Date of Birth *
+                </InputLabel>
                 <TextField
-                  label="Date of Birth"
                   type="date"
+                  id="dob"
                   name="dateOfBirth"
                   value={formData.dateOfBirth}
                   onChange={handleInputChange}
                   required
                   fullWidth
                   InputLabelProps={{ shrink: true }}
+                  
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
+                <InputLabel
+                  id="contact"
+                  style={{
+                    color: "black",
+                    marginBottom: "3px",
+                    textAlign: "left",
+                  }}
+                >
+                  Contact Number (10 Digit)*
+                </InputLabel>
                 <TextField
-                  placeholder="Contact Number"
+                  id="contact"
                   type="tel"
                   name="contactNumber"
                   value={formData.contactNumber}
                   onChange={handleInputChange}
+                  inputProps={{
+                    maxLength: 10, // Limit to 10 characters
+                    pattern: "[0-9]{10}", // Validate for 10 digits only
+                  }}
                   required
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
+                <InputLabel
+                  id="email"
+                  style={{
+                    color: "black",
+                    marginBottom: "3px",
+                    textAlign: "left",
+                  }}
+                >
+                  Email Address *
+                </InputLabel>
                 <TextField
-                  placeholder="Email Address"
+                  id="email"
                   type="email"
                   name="email"
                   value={formData.email}
@@ -191,9 +257,21 @@ if (!/^\d{10}$/.test(updatedFormData.contactNumber)) {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
+                <InputLabel
+                  id="temperature"
+                  style={{
+                    color: "black",
+                    marginBottom: "3px",
+                    textAlign: "left",
+                  }}
+                >
+                  Temperature in Celsius *
+                </InputLabel>
                 <TextField
-                  placeholder="Temperature in Celsius"
+                  id="temperature"
                   name="temperature"
+                  type="number"
+                  InputProps={{ inputProps: { min: 0, max: 100 } }}
                   value={formData.symptoms.temperature}
                   onChange={handleSymptomsChange}
                   required
@@ -201,9 +279,21 @@ if (!/^\d{10}$/.test(updatedFormData.contactNumber)) {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
+                <InputLabel
+                  id="spo2"
+                  style={{
+                    color: "black",
+                    marginBottom: "3px",
+                    textAlign: "left",
+                  }}
+                >
+                  SPO2 Level *
+                </InputLabel>
                 <TextField
-                  placeholder="SPO2 Level"
+                  id="spo2"
                   name="spo2Level"
+                  type="number"
+                  InputProps={{ inputProps: { min: 0, max: 100 } }}
                   value={formData.symptoms.spo2Level}
                   onChange={handleSymptomsChange}
                   required
@@ -214,11 +304,15 @@ if (!/^\d{10}$/.test(updatedFormData.contactNumber)) {
             <DialogActions
               style={{ justifyContent: "center", margin: "20px 0" }}
             >
-              <div className="cancel-button">
-                <Button onClick={handleClose}>CANCEL</Button>
+              <div className="btn-danger-add">
+                <Button onClick={handleClose} style={{ color: "white" }}>
+                  Cancel
+                </Button>
               </div>
-              <div className="submit-button">
-                <Button type="submit">Submit</Button>
+              <div className="btn-outline-primary-add">
+                <Button type="submit" style={{ color: "black" }}>
+                  Submit
+                </Button>
               </div>
             </DialogActions>
           </form>

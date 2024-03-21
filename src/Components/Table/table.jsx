@@ -11,8 +11,8 @@ import Paper from "@mui/material/Paper";
 import { ToastContainer, toast } from "react-toastify";
 import { MdCheck, MdClose } from "react-icons/md";
 import EditPatient from "../EditPatient/editPatient";
-import { FaArrowAltCircleRight } from "react-icons/fa";
-import { FaArrowAltCircleLeft } from "react-icons/fa";
+import { FaArrowAltCircleDown } from "react-icons/fa";
+import { FaArrowAltCircleUp } from "react-icons/fa";
 import SearchBoxFilter from "../SearchBox/searchBox";
 import AddPatient from "../AddPatient/addPatient";
 import axiosInstance from "../Context/axiosInstance";
@@ -26,6 +26,18 @@ export default function PatientTable() {
   const [editedUserId, setEditedUserId] = useState(null);
   const [filterQuery, setFilterQuery] = useState(""); // State to hold filter query
   const [filterType, setFilterType] = useState("");
+  const [sortingArrow, setSortingArrow] = useState({
+    id: "",
+    name: "",
+    uploadDate: "",
+    dateOfBirth: ""
+  });
+  const [active, setActive] = useState({
+    id: { upArrow: false, downArrow: false },
+    name: { upArrow: false, downArrow: false },
+    uploadDate: { upArrow: false, downArrow: false },
+    dateOfBirth: { upArrow: false, downArrow: false }
+  });
 
   useEffect(() => {
     loadUsers();
@@ -75,6 +87,13 @@ export default function PatientTable() {
   };
 
   const handleDeleteUserClick = (id) => {
+    setActive({
+      id: { upArrow: false, downArrow: false },
+      name: { upArrow: false, downArrow: false },
+      uploadDate: { upArrow: false, downArrow: false },
+      dateOfBirth: { upArrow: false, downArrow: false }
+    });
+    sortByIdasc();
     setUserIdToDelete(id);
     setShowConfirmation(true);
   };
@@ -89,6 +108,13 @@ export default function PatientTable() {
   };
 
   const handleOpenEditDialog = (userId) => {
+    setActive({
+      id: { upArrow: false, downArrow: false },
+      name: { upArrow: false, downArrow: false },
+      uploadDate: { upArrow: false, downArrow: false },
+      dateOfBirth: { upArrow: false, downArrow: false }
+    });
+    sortByIdasc();
     setEditedUserId(userId);
     setEditDialogOpen(true);
   };
@@ -110,28 +136,87 @@ export default function PatientTable() {
   };
 
   const sortingasc = (col) => {
-    const sorted = users
-      .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
-      .sort((a, b) => (a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1));
-    setUsers([
-      ...users.slice(0, (currentPage - 1) * rowsPerPage),
-      ...sorted,
-      ...users.slice(currentPage * rowsPerPage),
-    ]);
+    const isDownArrowActive = active[col].downArrow;
+  
+    // Toggle the downArrow state
+    setActive((prevState) => ({
+      ...prevState,
+      id: { upArrow: false, downArrow: false },
+      name: { upArrow: false, downArrow: false },
+      uploadDate: { upArrow: false, downArrow: false },
+      dateOfBirth: { upArrow: false, downArrow: false },
+      [col]: { upArrow: false, downArrow: !isDownArrowActive }
+    }));
+  
+    // If downArrow is currently active, remove sorting and set color to black
+    if (isDownArrowActive) {
+      sortByIdasc(col);
+    } else {
+      // If downArrow is not active, apply sorting and set color to blue
+      const sorted = users
+        .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+        .sort((a, b) => (a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1));
+      setUsers([
+        ...users.slice(0, (currentPage - 1) * rowsPerPage),
+        ...sorted,
+        ...users.slice(currentPage * rowsPerPage),
+      ]);
+      setSortingArrow(prevState => ({
+        ...prevState,
+        [col]: "asc"
+      }));
+    }
   };
-
+  
   const sortingdes = (col) => {
-    const sorted = users
-      .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
-      .sort((a, b) => (a[col].toLowerCase() < b[col].toLowerCase() ? 1 : -1));
-    setUsers([
-      ...users.slice(0, (currentPage - 1) * rowsPerPage),
-      ...sorted,
-      ...users.slice(currentPage * rowsPerPage),
-    ]);
+    const isUpArrowActive = active[col].upArrow;
+  
+    // Toggle the upArrow state
+    setActive((prevState) => ({
+      ...prevState,
+      id: { upArrow: false, downArrow: false },
+      name: { upArrow: false, downArrow: false },
+      uploadDate: { upArrow: false, downArrow: false },
+      dateOfBirth: { upArrow: false, downArrow: false },
+      [col]: { upArrow: !isUpArrowActive, downArrow: false }
+    }));
+  
+    // If upArrow is currently active, remove sorting and set color to black
+    if (isUpArrowActive) {
+      sortByIdasc(col);
+    } else {
+      // If upArrow is not active, apply sorting and set color to blue
+      const sorted = users
+        .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+        .sort((a, b) => (a[col].toLowerCase() < b[col].toLowerCase() ? 1 : -1));
+      setUsers([
+        ...users.slice(0, (currentPage - 1) * rowsPerPage),
+        ...sorted,
+        ...users.slice(currentPage * rowsPerPage),
+      ]);
+      setSortingArrow(prevState => ({
+        ...prevState,
+        [col]: "des"
+      }));
+    }
   };
-
   const sortingascid = () => {
+    const isDownArrowActive = active.id.downArrow;
+
+  // Toggle the downArrow state
+  setActive((prevState) => ({
+    ...prevState,
+    id: { upArrow: false, downArrow: !isDownArrowActive },
+    name: { upArrow: false, downArrow: false },
+    uploadDate: { upArrow: false, downArrow: false },
+    dateOfBirth: { upArrow: false, downArrow: false }
+  }));
+
+  // If downArrow is currently active, remove sorting and set color to black
+  if (isDownArrowActive) {
+    sortByIdasc();
+  } else {
+    // If downArrow is not active, apply sorting and set color to blue
     const sorted = users
       .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
       .sort((a, b) => a.id - b.id);
@@ -140,51 +225,215 @@ export default function PatientTable() {
       ...sorted,
       ...users.slice(currentPage * rowsPerPage),
     ]);
+    setSortingArrow(prevState => ({
+      ...prevState,
+      id: "asc"
+    }));
+  }
   };
 
   const sortingdesid = () => {
-    const sorted = users
-      .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
-      .sort((a, b) => b.id - a.id);
-    setUsers([
-      ...users.slice(0, (currentPage - 1) * rowsPerPage),
-      ...sorted,
-      ...users.slice(currentPage * rowsPerPage),
-    ]);
+    const isUpArrowActive = active.id.upArrow;
+  
+    // Toggle the upArrow state
+    setActive((prevState) => ({
+      ...prevState,
+      id: { upArrow: !isUpArrowActive, downArrow: false },
+      name: { upArrow: false, downArrow: false },
+      uploadDate: { upArrow: false, downArrow: false },
+      dateOfBirth: { upArrow: false, downArrow: false }
+    }));
+  
+    // If upArrow is currently active, remove sorting and set color to black
+    if (isUpArrowActive) {
+      sortByIdasc();
+    } else {
+      // If upArrow is not active, apply sorting and set color to blue
+      const sorted = users
+        .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+        .sort((a, b) => b.id - a.id);
+      setUsers([
+        ...users.slice(0, (currentPage - 1) * rowsPerPage),
+        ...sorted,
+        ...users.slice(currentPage * rowsPerPage),
+      ]);
+      setSortingArrow(prevState => ({
+        ...prevState,
+        id: "des"
+      }));
+    }
+  };
+  const sortingascdateofBirth = () => {
+    const isDownArrowActive = active.dateOfBirth.downArrow;
+  
+    // Toggle the downArrow state
+    setActive((prevState) => ({
+      ...prevState,
+      id: { upArrow: false, downArrow: false },
+      name: { upArrow: false, downArrow: false },
+      uploadDate: { upArrow: false, downArrow: false },
+      dateOfBirth: { upArrow: false, downArrow: !isDownArrowActive }
+    }));
+  
+    // If downArrow is currently active, remove sorting and set color to black
+    if (isDownArrowActive) {
+      sortByIdasc();
+    } else {
+      // If downArrow is not active, apply sorting and set color to blue
+      const sorted = users
+        .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+        .sort((a, b) => {
+          const [yearA, monthA, dayA] = a.dateOfBirth.split("-").map(Number);
+          const [yearB, monthB, dayB] = b.dateOfBirth.split("-").map(Number);
+          return (
+            new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB)
+          );
+        });
+      setUsers([
+        ...users.slice(0, (currentPage - 1) * rowsPerPage),
+        ...sorted,
+        ...users.slice(currentPage * rowsPerPage),
+      ]);
+      setSortingArrow(prevState => ({
+        ...prevState,
+        dateOfBirth: "asc"
+      }));
+    }
+  };
+  
+  const sortingdesdateofBirth = () => {
+    const isUpArrowActive = active.dateOfBirth.upArrow;
+  
+    // Toggle the upArrow state
+    setActive((prevState) => ({
+      ...prevState,
+      id: { upArrow: false, downArrow: false },
+      name: { upArrow: false, downArrow: false },
+      uploadDate: { upArrow: false, downArrow: false },
+      dateOfBirth: { upArrow: !isUpArrowActive, downArrow: false }
+    }));
+  
+    // If upArrow is currently active, remove sorting and set color to black
+    if (isUpArrowActive) {
+      sortByIdasc();
+    } else {
+      // If upArrow is not active, apply sorting and set color to blue
+      const sorted = users
+        .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+        .sort((a, b) => {
+          const [yearA, monthA, dayA] = a.dateOfBirth.split("-").map(Number);
+          const [yearB, monthB, dayB] = b.dateOfBirth.split("-").map(Number);
+          return (
+            new Date(yearB, monthB - 1, dayB) - new Date(yearA, monthA - 1, dayA)
+          );
+        });
+      setUsers([
+        ...users.slice(0, (currentPage - 1) * rowsPerPage),
+        ...sorted,
+        ...users.slice(currentPage * rowsPerPage),
+      ]);
+      setSortingArrow(prevState => ({
+        ...prevState,
+        dateOfBirth: "des"
+      }));
+    }
+  };
+  
+  const sortingascUploadDate = () => {
+    const isDownArrowActive = active.uploadDate.downArrow;
+  
+    // Toggle the downArrow state
+    setActive((prevState) => ({
+      ...prevState,
+      id: { upArrow: false, downArrow: false },
+      name: { upArrow: false, downArrow: false },
+      uploadDate: { upArrow: false, downArrow: !isDownArrowActive },
+      dateOfBirth: { upArrow: false, downArrow: false }
+    }));
+  
+    // If downArrow is currently active, remove sorting and set color to black
+    if (isDownArrowActive) {
+      sortByIdasc();
+    } else {
+      // If downArrow is not active, apply sorting and set color to blue
+      const sorted = users
+        .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+        .sort((a, b) => {
+          return (
+            new Date(a.uploadDate) - new Date(b.uploadDate)
+          );
+        });
+      setUsers([
+        ...users.slice(0, (currentPage - 1) * rowsPerPage),
+        ...sorted,
+        ...users.slice(currentPage * rowsPerPage),
+      ]);
+      setSortingArrow(prevState => ({
+        ...prevState,
+        uploadDate: "asc"
+      }));
+    }
+  };
+  
+  const sortingdesUploadDate = () => {
+    const isUpArrowActive = active.uploadDate.upArrow;
+  
+    // Toggle the upArrow state
+    setActive((prevState) => ({
+      ...prevState,
+      id: { upArrow: false, downArrow: false },
+      name: { upArrow: false, downArrow: false },
+      uploadDate: { upArrow: !isUpArrowActive, downArrow: false },
+      dateOfBirth: { upArrow: false, downArrow: false }
+    }));
+  
+    // If upArrow is currently active, remove sorting and set color to black
+    if (isUpArrowActive) {
+      sortByIdasc();
+    } else {
+      // If upArrow is not active, apply sorting and set color to blue
+      const sorted = users
+        .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+        .sort((a, b) => {
+          return (
+            new Date(b.uploadDate) - new Date(a.uploadDate)
+          );
+        });
+      setUsers([
+        ...users.slice(0, (currentPage - 1) * rowsPerPage),
+        ...sorted,
+        ...users.slice(currentPage * rowsPerPage),
+      ]);
+      setSortingArrow(prevState => ({
+        ...prevState,
+        uploadDate: "des"
+      }));
+    }
   };
 
-  const sortingascdate = () => {
-    const sorted = users
-      .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
-      .sort((a, b) => {
-        const [dayA, monthA, yearA] = a.uploadDate.split("-").map(Number);
-        const [dayB, monthB, yearB] = b.uploadDate.split("-").map(Number);
-        return (
-          new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB)
-        );
-      });
-    setUsers([
-      ...users.slice(0, (currentPage - 1) * rowsPerPage),
-      ...sorted,
-      ...users.slice(currentPage * rowsPerPage),
-    ]);
+  const convertDateFormat = (dateString) => {
+    // Split the date string into year, month, and day
+    const [year, month, day] = dateString.split('-');
+  
+    // Return the date in dd-mm-yyyy format
+    return `${day}-${month}-${year}`;
   };
 
-  const sortingdesdate = () => {
+
+  const sortByIdasc = () => {
+   
     const sorted = users
       .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
-      .sort((a, b) => {
-        const [dayA, monthA, yearA] = a.uploadDate.split("-").map(Number);
-        const [dayB, monthB, yearB] = b.uploadDate.split("-").map(Number);
-        return (
-          new Date(yearB, monthB - 1, dayB) - new Date(yearA, monthA - 1, dayA)
-        );
-      });
+      .sort((a, b) => a.id - b.id);
     setUsers([
       ...users.slice(0, (currentPage - 1) * rowsPerPage),
       ...sorted,
       ...users.slice(currentPage * rowsPerPage),
     ]);
+    setSortingArrow(prevState => ({
+      ...prevState,
+      id: "asc"
+    }));
   };
 
   return (
@@ -192,32 +441,7 @@ export default function PatientTable() {
       <div className="operation-line">
         <AddPatient  loadUsers={loadUsers}/>
 
-        <div className="pagination-container">
-          <span className="rows-per-page">Rows per page:</span>
-          <input
-            type="number"
-            min="1"
-            className="rows-per-page"
-            value={rowsPerPage}
-            onChange={(e) => setRowsPerPage(parseInt(e.target.value))}
-          />
-          <span>Page:</span>
-          {Array.from(
-            { length: Math.ceil(users.length / rowsPerPage) },
-            (_, i) => (
-              <button
-                key={i}
-                className={`page-button ${
-                  currentPage === i + 1 ? "active" : ""
-                }`}
-                onClick={() => handlePageChange(i + 1)}
-              >
-                {i + 1}
-              </button>
-            )
-          )}
-        </div>
-
+       
         <SearchBoxFilter
           filterType={filterType}
           filterQuery={filterQuery}
@@ -235,36 +459,36 @@ export default function PatientTable() {
           <TableHead>
             <TableRow>
               <TableCell style={{ fontWeight: "bold" }} align="center">
-                <FaArrowAltCircleLeft
+                <FaArrowAltCircleDown
                   onClick={sortingascid}
-                  style={{ marginRight: "10px", cursor: "pointer" }}
+                  style={{ marginRight: "10px", cursor: "pointer", color: active.id.downArrow ? "blue" : "black" }}
                 />
                 ID
-                <FaArrowAltCircleRight
+                <FaArrowAltCircleUp
                   onClick={sortingdesid}
-                  style={{ marginLeft: "10px", cursor: "pointer" }}
+                  style={{ marginLeft: "10px", cursor: "pointer", color: active.id.upArrow ? "blue" : "black" }}
                 />
               </TableCell>
               <TableCell style={{ fontWeight: "bold" }} align="center">
-                <FaArrowAltCircleLeft
+                <FaArrowAltCircleDown
                   onClick={() => sortingasc("name")}
-                  style={{ marginRight: "10px", cursor: "pointer" }}
+                  style={{ marginRight: "10px", cursor: "pointer", color: active.name.downArrow ? "blue" : "black"  }}
                 />
                 Name
-                <FaArrowAltCircleRight
+                <FaArrowAltCircleUp
                   onClick={() => sortingdes("name")}
-                  style={{ marginLeft: "10px", cursor: "pointer" }}
+                  style={{ marginLeft: "10px", cursor: "pointer", color: active.name.upArrow ? "blue" : "black" }}
                 />
               </TableCell>
               <TableCell style={{ fontWeight: "bold" }} align="center">
-                <FaArrowAltCircleLeft
-                  onClick={sortingascdate}
-                  style={{ marginRight: "10px", cursor: "pointer" }}
+                <FaArrowAltCircleDown
+                  onClick={sortingascUploadDate}
+                  style={{ marginRight: "10px", cursor: "pointer", color: active.uploadDate.downArrow ? "blue" : "black"  }}
                 />
                 Upload Date
-                <FaArrowAltCircleRight
-                  onClick={sortingdesdate}
-                  style={{ marginLeft: "10px", cursor: "pointer" }}
+                <FaArrowAltCircleUp
+                  onClick={sortingdesUploadDate}
+                  style={{ marginLeft: "10px", cursor: "pointer", color: active.uploadDate.upArrow ? "blue" : "black" }}
                 />
               </TableCell>
               <TableCell style={{ fontWeight: "bold" }} align="center">
@@ -274,7 +498,15 @@ export default function PatientTable() {
                 Gender
               </TableCell>
               <TableCell style={{ fontWeight: "bold" }} align="center">
-                Date Of Birth
+              <FaArrowAltCircleDown
+                  onClick={sortingascdateofBirth}
+                  style={{ marginLeft: "10px",marginRight:"8px", cursor: "pointer", color: active.dateOfBirth.downArrow ? "blue" : "black"  }}
+                />
+                Date of Birth
+                <FaArrowAltCircleUp
+                  onClick={sortingdesdateofBirth}
+                  style={{ marginLeft: "10px", cursor: "pointer", color: active.dateOfBirth.upArrow ? "blue" : "black"  }}
+                />
               </TableCell>
               <TableCell style={{ fontWeight: "bold" }} align="center">
                 DICOM Status
@@ -294,7 +526,7 @@ export default function PatientTable() {
                   <TableCell align="center">{row.uploadDate}</TableCell>
                   <TableCell align="center">{row.email}</TableCell>
                   <TableCell align="center">{row.gender}</TableCell>
-                  <TableCell align="center">{row.dateOfBirth}</TableCell>
+                  <TableCell align="center">{convertDateFormat(row.dateOfBirth)}</TableCell>
                   <TableCell align="center">
                     {row.dicomAttached ? (
                       <>
@@ -339,6 +571,31 @@ export default function PatientTable() {
           </TableBody>
         </Table>
       </TableContainer>
+      <div className="pagination-container">
+          <span className="rows-per-page">Rows per page:</span>
+          <input
+            type="number"
+            min="1"
+            className="rows-per-page"
+            value={rowsPerPage}
+            onChange={(e) => setRowsPerPage(parseInt(e.target.value))}
+          />
+          <span>Page:</span>
+          {Array.from(
+            { length: Math.ceil(users.length / rowsPerPage) },
+            (_, i) => (
+              <button
+                key={i}
+                className={`page-button ${
+                  currentPage === i + 1 ? "active" : ""
+                }`}
+                onClick={() => handlePageChange(i + 1)}
+              >
+                {i + 1}
+              </button>
+            )
+          )}
+        </div>
 
       {/* Confirmation Dialog */}
       {showConfirmation && (

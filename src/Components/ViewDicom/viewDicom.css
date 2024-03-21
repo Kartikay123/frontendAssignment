@@ -55,5 +55,8 @@
   text-decoration: none;
   cursor: pointer;
   margin-left: 10px;
+  position: absolute;
+  bottom: 8rem;
+  right: 29rem;
   border-radius: 3px;
 }

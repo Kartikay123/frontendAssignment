@@ -84,8 +84,8 @@ const Header = () => {
                   Logout
                 </button>
               ) : (
-                <Link to="/register" className="nav-link register-link">
-                  Register
+                <Link to="/login" className="nav-link register-link">
+                  Login
                 </Link>
               )}
             </li>
